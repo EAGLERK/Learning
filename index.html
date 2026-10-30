@@ -2,15 +2,14 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Manrope:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap">
 <style>
-/* Layout: a full-screen 3D opening with the nucleus dead centre, then an editorial column of seven sections on obsidian.
-   Single dark world by choice (brief: obsidian, graphite, ivory, bronze). */
+/* Layout: the 3D field is fixed behind the whole site and scroll drives it; a full-screen opening, then an editorial
+   column of six sections. Single dark world by choice (brief: obsidian, graphite, ivory, bronze). */
 :root{
   --bg:#08090B;       /* obsidian */
   --surface:#17191D;  /* graphite */
   --fg:#E5E2DA;       /* warm ivory */
   --muted:#8B877E;    /* ivory, dimmed */
   --bronze:#A99B83;   /* accent */
-  --ember:#B8705A;    /* conflict only */
   --line:rgba(229,226,218,.12);
   --serif:"Cormorant Garamond",Georgia,serif;
   --sans:"Manrope",system-ui,sans-serif;
@@ -22,85 +21,85 @@ html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-weight:300;line-height:1.6;overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+/* ── the field (fixed, behind everything) ── */
+#c{position:fixed;top:0;left:0;z-index:0;display:block}
+#labels{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);pointer-events:auto;cursor:pointer;will-change:transform,opacity;text-shadow:0 1px 2px #000,0 0 10px #000;line-height:1.5}
+.lbl small{display:block;font-size:8px;color:var(--muted);letter-spacing:.18em}
+.lbl.hot{z-index:5}.lbl.hot span{border-bottom:1px solid var(--bronze)}
+
 /* ── nav ── */
-nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px max(20px,env(safe-area-inset-right,0px)) 16px max(20px,env(safe-area-inset-left,0px));font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);mix-blend-mode:difference}
+nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px max(20px,env(safe-area-inset-right,0px)) 16px max(20px,env(safe-area-inset-left,0px));font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:linear-gradient(rgba(8,9,11,.85),rgba(8,9,11,0))}
 nav .brand{color:var(--fg);font-family:var(--serif);font-size:15px;letter-spacing:.02em;text-transform:none;white-space:nowrap}
 nav ul{display:flex;gap:18px;list-style:none;margin:0;padding:0;flex-wrap:wrap;justify-content:flex-end}
 nav a{color:inherit;text-decoration:none}
 nav a:hover{color:var(--fg)}
 @media (max-width:760px){nav ul{display:none}}
 
-/* ── hero ── */
-#hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden}
-#c{position:absolute;top:0;left:0;display:block}
-#labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-.lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);pointer-events:auto;cursor:pointer;will-change:transform,opacity;text-shadow:0 1px 2px #000,0 0 10px #000;line-height:1.5}
-.lbl small{display:block;font-size:8px;color:var(--muted);letter-spacing:.18em}
-.lbl.hot{z-index:5}.lbl.hot span{border-bottom:1px solid var(--bronze)}
-#opening{position:absolute;inset:0;z-index:6;display:grid;place-items:center;text-align:center;padding:0 max(20px,env(safe-area-inset-left,0px));background:radial-gradient(ellipse at center,rgba(8,9,11,0) 0%,rgba(8,9,11,.6) 70%);transition:opacity 1.6s ease}
+/* ── opening ── */
+#hero{position:relative;z-index:2;height:100vh;height:100svh;min-height:560px}
+#opening{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:0 max(20px,env(safe-area-inset-left,0px));transition:opacity 1.4s ease}
 #opening.gone{opacity:0;pointer-events:none}
 #opening .eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--bronze);margin-bottom:22px}
 #opening h1{font-family:var(--serif);font-weight:300;font-size:clamp(34px,6vw,76px);line-height:1;margin:0 0 18px;letter-spacing:.01em;text-wrap:balance}
 #opening h1 em{font-style:italic;color:var(--bronze)}
-#opening p{font-family:var(--serif);font-size:clamp(17px,2vw,22px);font-weight:300;margin:0 auto 36px;max-width:40ch;color:var(--fg);opacity:.8;text-wrap:balance}
-.btn{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--fg);background:transparent;border:1px solid var(--bronze);border-radius:999px;padding:14px 26px;cursor:pointer;transition:background .3s,color .3s}
+#opening p{font-family:var(--serif);font-size:clamp(17px,2vw,22px);font-weight:300;margin:0 auto 36px;max-width:40ch;opacity:.8;text-wrap:balance}
+.btn{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--fg);background:rgba(8,9,11,.5);border:1px solid var(--bronze);border-radius:999px;padding:14px 26px;cursor:pointer;transition:background .3s,color .3s}
 .btn:hover,.btn:focus-visible{background:var(--bronze);color:var(--bg);outline:none}
-#hud{position:absolute;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:4;opacity:0;transition:opacity 1.2s .8s}
-#hud.show{opacity:1}
-#panel{position:absolute;right:max(20px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);width:min(340px,calc(100vw - 40px));background:rgba(23,25,29,.88);border:1px solid var(--line);padding:24px 26px;z-index:8;backdrop-filter:blur(10px)}
+#hud{position:fixed;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);z-index:4;opacity:0;pointer-events:none;transition:opacity .8s}
+#hud.show{opacity:1;pointer-events:auto}
+#hud .zoom{display:flex;gap:6px}
+#hud .zoom button{font:inherit;color:var(--fg);background:rgba(8,9,11,.6);border:1px solid var(--line);border-radius:999px;width:34px;height:34px;cursor:pointer;font-size:14px}
+#panel{position:fixed;right:max(20px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);width:min(340px,calc(100vw - 40px));background:rgba(23,25,29,.94);border:1px solid var(--line);padding:24px 26px;z-index:30}
 #panel .cat{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze)}
 #panel h2{font-family:var(--serif);font-weight:300;font-size:34px;line-height:1;margin:6px 0 14px}
-#panel p{margin:0 0 16px;font-size:14px;line-height:1.65;color:var(--fg)}
+#panel p{margin:0 0 16px;font-size:14px;line-height:1.65}
 #panel .rel{display:flex;flex-wrap:wrap;gap:8px}
 #panel .rel button{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);background:none;border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
 #panel .rel button:hover{border-color:var(--bronze)}
 #panel .x{position:absolute;top:10px;right:12px;background:none;border:0;color:var(--muted);font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;padding:6px}
-@media (max-width:640px){#panel{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 60px);transform:none;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));width:auto}#hud{display:none}.lbl{font-size:8.5px}}
+@media (max-width:640px){#panel{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:none;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));width:auto}#hud span{display:none}.lbl{font-size:8.5px}}
 
-/* ── sections ── */
-main{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
-section.s{max-width:1100px;margin:0 auto;padding-block:clamp(72px,12vw,150px);border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(24px,5vw,80px)}
-section.s:first-of-type{border-top:0}
+/* ── sections (over the field) ── */
+main{position:relative;z-index:2;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+section.s{max-width:1100px;margin:0 auto;padding-block:clamp(72px,12vw,150px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:clamp(24px,5vw,80px)}
 .k{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--bronze)}
 .k small{display:block;color:var(--muted);margin-top:6px;letter-spacing:.16em}
+.prose{background:rgba(8,9,11,.72);padding:clamp(22px,3vw,40px);border:1px solid var(--line);min-width:0}
 h2.t{font-family:var(--serif);font-weight:300;font-size:clamp(30px,4vw,52px);line-height:1.05;margin:0 0 22px;letter-spacing:.005em;text-wrap:balance}
-.prose p{font-size:clamp(16px,1.3vw,18px);max-width:62ch;margin:0 0 1em;color:var(--fg)}
+.prose p{font-size:clamp(16px,1.3vw,18px);max-width:62ch;margin:0 0 1em}
 .prose p:last-child{margin-bottom:0}
-.prose .lead{font-family:var(--serif);font-size:clamp(22px,2.2vw,28px);line-height:1.3;font-weight:300}
-.reveal{opacity:0;transform:translateY(14px);transition:opacity .9s ease,transform .9s ease}
+.prose .lead{font-family:var(--serif);font-size:clamp(22px,2.2vw,28px);line-height:1.3}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 1s ease,transform 1s ease}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 @media (max-width:760px){section.s{grid-template-columns:1fr;gap:20px}}
 
-/* architecture */
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:28px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:28px}
 .steps div{background:var(--bg);padding:20px 18px;min-width:0}
 .steps b{font-family:var(--serif);font-weight:400;font-size:22px;display:block;margin-bottom:6px}
 .steps span{font-size:13px;color:var(--muted);line-height:1.5}
 
-/* network index */
-.index{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px 32px;margin-top:28px}
-.index h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze);margin:0 0 8px;font-weight:400}
+.index{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:24px 32px;margin-top:28px}
+.index h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 8px;font-weight:400}
 .index ul{list-style:none;margin:0;padding:0}
 .index li{font-family:var(--serif);font-size:19px;line-height:1.5}
 .index button{all:unset;cursor:pointer;color:var(--fg);border-bottom:1px solid transparent}
 .index button:hover,.index button:focus-visible{border-bottom-color:var(--bronze)}
 
-/* becoming / unbecoming */
 .dual{margin-top:28px;border:1px solid var(--line);background:var(--surface)}
-#dualc{display:block;width:100%;height:340px;max-width:100%}
+#dualc{display:block;width:100%;height:320px;max-width:100%}
 .dual .ctl{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;padding:16px 20px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
 .dual .ctl span:last-child{text-align:right}
 input[type=range]{accent-color:var(--bronze);width:min(320px,40vw)}
 .dual .lists{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:20px;border-top:1px solid var(--line)}
-.dual .lists ul{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.9;color:var(--fg)}
+.dual .lists ul{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.9}
 .dual .lists h4{font-family:var(--serif);font-weight:400;font-size:22px;margin:0 0 8px}
 .dual .lists .u{text-align:right}
 @media (max-width:640px){.dual .lists{grid-template-columns:1fr}.dual .lists .u{text-align:left}.dual .ctl{grid-template-columns:1fr;text-align:center}.dual .ctl span:last-child{text-align:center}input[type=range]{width:100%}}
 
-/* observer */
 .obs{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
-.rings{position:relative;aspect-ratio:1;max-width:360px;width:100%;margin:0 auto}
+.rings{position:relative;aspect-ratio:1;max-width:340px;width:100%;margin:0 auto}
 .rings div{position:absolute;inset:0;border:1px solid var(--line);border-radius:50%;display:grid;place-items:start center;padding-top:10px;font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .rings .r2{inset:18%}.rings .r3{inset:38%;border-color:var(--bronze);color:var(--bronze);place-items:center;padding:0}
 .obs label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
@@ -108,7 +107,6 @@ input[type=range]{accent-color:var(--bronze);width:min(320px,40vw)}
 .obs .out{margin-top:18px;padding:18px 20px;border-left:1px solid var(--bronze);font-family:var(--serif);font-size:20px;line-height:1.4;min-height:88px}
 @media (max-width:760px){.obs{grid-template-columns:1fr}}
 
-/* paradox */
 .q{border-top:1px solid var(--line)}
 .q:last-child{border-bottom:1px solid var(--line)}
 .q button{all:unset;display:flex;justify-content:space-between;gap:16px;width:100%;padding:22px 0;cursor:pointer;font-family:var(--serif);font-size:clamp(20px,2vw,26px);line-height:1.25}
@@ -116,16 +114,18 @@ input[type=range]{accent-color:var(--bronze);width:min(320px,40vw)}
 .q.open button::after{content:"−"}
 .q .a{max-height:0;overflow:hidden;transition:max-height .6s ease}
 .q.open .a{max-height:400px}
-.q .a p{margin:0 0 22px;max-width:60ch;color:var(--fg);font-size:16px}
+.q .a p{margin:0 0 22px;max-width:60ch;font-size:16px}
 
-/* about + footer */
 .book{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;margin-top:28px}
 .cover{width:150px;aspect-ratio:2/3;background:var(--surface);border:1px solid var(--line);display:grid;align-content:end;padding:14px;font-family:var(--serif);font-size:15px;line-height:1.15}
 .cover em{color:var(--bronze);font-style:italic}
 .cover small{display:block;font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:10px}
 @media (max-width:560px){.book{grid-template-columns:1fr}}
-footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bottom,0px) + 40px);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+footer{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:40px max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 70px) max(20px,env(safe-area-inset-left,0px));border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 </style>
+
+<canvas id="c"></canvas>
+<div id="labels"></div>
 
 <nav>
   <div class="brand">Becoming <em>&amp;</em> Unbecoming</div>
@@ -139,11 +139,8 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
   </ul>
 </nav>
 
-<!-- ═══════════ 1. OPENING EXPERIENCE ═══════════ -->
+<!-- ═══════════ 1. OPENING ═══════════ -->
 <section id="hero" aria-label="Opening experience">
-  <canvas id="c"></canvas>
-  <div id="labels"></div>
-
   <div id="opening">
     <div>
       <div class="eyebrow">An interactive extension of the book</div>
@@ -152,24 +149,23 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
       <button class="btn" id="enter">Enter the experience</button>
     </div>
   </div>
-
-  <div id="hud">
-    <span>Drag to orbit · Scroll on the field to zoom · Rest on a concept · Click to read it</span>
-    <span id="hudCount"></span>
-  </div>
-
-  <aside id="panel" hidden>
-    <button class="x" id="panelClose">Close</button>
-    <div class="cat" id="pCat"></div>
-    <h2 id="pName"></h2>
-    <p id="pDef"></p>
-    <div class="cat" style="margin-bottom:8px">Connected to</div>
-    <div class="rel" id="pRel"></div>
-  </aside>
 </section>
 
+<div id="hud">
+  <span>Drag to orbit · Rest on a concept · Click to read it · Scroll to move through</span>
+  <div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button></div>
+</div>
+
+<aside id="panel" hidden>
+  <button class="x" id="panelClose">Close</button>
+  <div class="cat" id="pCat"></div>
+  <h2 id="pName"></h2>
+  <p id="pDef"></p>
+  <div class="cat" style="margin-bottom:8px">Connected to</div>
+  <div class="rel" id="pRel"></div>
+</aside>
+
 <main>
-<!-- ═══════════ 2. CENTRAL PROPOSITION ═══════════ -->
 <section class="s" id="proposition">
   <div class="k reveal">01<small>The central proposition</small></div>
   <div class="prose reveal">
@@ -188,22 +184,20 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
   </div>
 </section>
 
-<!-- ═══════════ 3. THE INTERCONNECTED SYSTEM ═══════════ -->
 <section class="s" id="system">
   <div class="k reveal">02<small>The interconnected system</small></div>
   <div class="prose reveal">
     <h2 class="t">No concept operates alone.</h2>
-    <p>The field at the top of this page holds <span id="sysCount"></span> concepts in eight families. Each strand leaves the same point and returns to it through the others. Select any concept below to open it in the field and see what it is connected to.</p>
+    <p>The field behind this page holds <span id="sysCount"></span> concepts in eight families. Each strand leaves the same point and returns to it through the others. Select any concept to open it and see what it is connected to.</p>
     <div class="index" id="index"></div>
   </div>
 </section>
 
-<!-- ═══════════ 4. BECOMING AND UNBECOMING ═══════════ -->
 <section class="s" id="dual">
   <div class="k reveal">03<small>Two movements, one process</small></div>
   <div class="prose reveal">
     <h2 class="t">One builds. The other dissolves. Neither exists alone.</h2>
-    <p>Move between the two and watch how each depends on the other. Build without release and the structure seizes; release without building and nothing remains to be released.</p>
+    <p>Move between the two and watch how each depends on the other, here and in the field behind. Build without release and the structure seizes; release without building and nothing remains to be released.</p>
     <div class="dual">
       <canvas id="dualc" aria-label="Becoming and unbecoming animation"></canvas>
       <div class="ctl">
@@ -219,7 +213,6 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
   </div>
 </section>
 
-<!-- ═══════════ 5. THE OBSERVER ═══════════ -->
 <section class="s" id="observer">
   <div class="k reveal">04<small>The observer</small></div>
   <div class="prose reveal">
@@ -248,7 +241,6 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
   </div>
 </section>
 
-<!-- ═══════════ 6. THE PARADOX OF CHANGE ═══════════ -->
 <section class="s" id="paradox">
   <div class="k reveal">05<small>The paradox of change</small></div>
   <div class="prose reveal">
@@ -258,7 +250,6 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
   </div>
 </section>
 
-<!-- ═══════════ 7. ABOUT THE BOOK ═══════════ -->
 <section class="s" id="book">
   <div class="k reveal">06<small>About the book</small></div>
   <div class="prose reveal">
@@ -275,79 +266,63 @@ footer{max-width:1100px;margin:0 auto;padding:40px 0 calc(env(safe-area-inset-bo
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <span>The Art of Becoming and Unbecoming</span>
   <span>A living framework · <span id="footCount"></span> concepts</span>
 </footer>
-</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════════
    THE CONTENT  — edit these blocks. Everything else is machinery.
    ═══════════════════════════════════════════════════════════════ */
-const FAMILIES = {
-  Identity:       0xE5E2DA,
-  Experience:     0xCDBFA3,
-  Cognition:      0xA99B83,
-  Memory:         0x9A95A3,
-  Conditioning:   0x7E776B,
-  Conflict:       0xB8705A,
-  Awareness:      0xDDD2BA,
-  Transformation: 0xBFAE8E,
-};
+const FAMILIES = { Identity:0xE5E2DA, Experience:0xCDBFA3, Cognition:0xA99B83, Memory:0x9A95A3, Conditioning:0x7E776B, Conflict:0xB8705A, Awareness:0xDDD2BA, Transformation:0xBFAE8E };
 
 // [ name, family, definition, [connected concepts] ]
 const CONCEPTS = [
-  ["Self-image",         "Identity", "The picture a person holds of who they are. Assembled from what others reflect back and what memory keeps.", ["Perception","Retention","Beliefs"]],
-  ["Personality",        "Identity", "The stable-seeming pattern of responses that others learn to expect. Stable because it repeats, not because it is fixed.", ["Patterns","Learned behaviour","Adaptation"]],
-  ["Individuality",      "Identity", "The sense of being distinct. It needs others to exist: a difference is always a difference from something.", ["Relationships","Environment","Recognition"]],
-  ["The narrated self",  "Identity", "The story a person tells about their life, edited at every retelling so that the present makes sense.", ["Recall","Association","Interpretation"]],
-
-  ["Environment",        "Experience", "Everything that surrounds a person before they have chosen anything: place, language, climate, class.", ["Inheritance","Individuality","Attention"]],
-  ["Relationships",      "Experience", "Other people, and what forms in the space between. Most of what a person believes about themselves began here.", ["Individuality","Self-image","Attachment"]],
-  ["Events",             "Experience", "What happens. Some events are absorbed without trace; others reorganise everything around them.", ["Rupture","Retention","Interpretation"]],
-  ["Repetition",         "Experience", "The same day many times. Repetition is how experience hardens into pattern and pattern into character.", ["Patterns","Learned behaviour","Attention"]],
-
-  ["Thought",            "Cognition", "The mind's commentary on experience. Fast, constant and easily mistaken for the experience itself.", ["Interpretation","Observation","Beliefs"]],
-  ["Perception",         "Cognition", "What reaches awareness after the senses and expectation have done their filtering. Never the whole picture.", ["Attention","Self-image","Beliefs"]],
-  ["Interpretation",     "Cognition", "The meaning assigned to what is perceived. Two people live through the same event and leave with different pasts.", ["Thought","Events","The narrated self"]],
-  ["Attention",          "Cognition", "Where the mind rests. Whatever receives attention grows; whatever does not slowly stops existing for us.", ["Perception","Observation","Repetition"]],
-
-  ["Retention",          "Memory", "What is kept. Not a recording but a selection, made by intensity, repetition and need.", ["Events","Self-image","Forgetting"]],
-  ["Association",        "Memory", "Memory's filing system: one thing recalled brings its neighbours. This is how the past organises the present.", ["Recall","The narrated self","Patterns"]],
-  ["Recall",             "Memory", "The act of remembering rebuilds the memory. Each return changes what is returned to.", ["Association","The narrated self","Reconstruction"]],
-  ["Forgetting",         "Memory", "Not a failure of memory but one of its functions. A self that forgot nothing could never change.", ["Retention","Release","Dissolution"]],
-
-  ["Beliefs",            "Conditioning", "Convictions absorbed before they could be examined. They feel like sight, not like a lens.", ["Inheritance","Perception","Contradiction"]],
-  ["Patterns",           "Conditioning", "Grooves worn by repetition. They save effort and cost possibility.", ["Repetition","Personality","Resistance"]],
-  ["Learned behaviour",  "Conditioning", "What was rewarded, repeated. What was punished, hidden. Much of character is a record of early consequences.", ["Personality","Repetition","Adaptation"]],
-  ["Inheritance",        "Conditioning", "What arrives through family, culture and era without asking. The oldest layer of the self.", ["Environment","Beliefs","Attachment"]],
-  ["Attachment",         "Conditioning", "What is held onto for safety: people, places, roles, certainties. The grip is the problem, not the thing.", ["Relationships","Inheritance","Release"]],
-
-  ["Contradiction",      "Conflict", "Two things held as true that cannot both be. The structure's first crack, and the beginning of its honesty.", ["Beliefs","Uncertainty","Recognition"]],
-  ["Uncertainty",        "Conflict", "Not knowing, without a frame to put it in. Unbearable to the old self, workable to the observing one.", ["Contradiction","Reflection","Dissolution"]],
-  ["Resistance",         "Conflict", "The old structure defending itself: arguing with evidence, delaying, explaining away.", ["Patterns","Contradiction","Attachment"]],
-  ["Rupture",            "Conflict", "An event too large to absorb. Loss, failure, revelation. It ends a version of the self whether or not the person agrees.", ["Events","Dissolution","Reconstruction"]],
-
-  ["Observation",        "Awareness", "Watching experience as it happens, without yet deciding what it means.", ["Thought","Attention","The observer"]],
-  ["Recognition",        "Awareness", "The moment a pattern becomes visible as a pattern. Nothing has changed yet, and everything has.", ["Contradiction","Individuality","Reflection"]],
-  ["Reflection",         "Awareness", "Turning experience over after it has passed. Where interpretation can be questioned instead of obeyed.", ["Recognition","Uncertainty","Recall"]],
-  ["The observer",       "Awareness", "The capacity that notices experience, interpretation and self-image alike. Not a thing in the picture; the one looking at it.", ["Observation","Reflection","Release"]],
-
-  ["Adaptation",         "Transformation", "Change in response to pressure. Most becoming happens here, quietly, without a decision.", ["Personality","Learned behaviour","Environment"]],
-  ["Dissolution",        "Transformation", "An identity, belief or attachment losing its hold. It rarely feels like freedom while it is happening.", ["Rupture","Uncertainty","Forgetting"]],
-  ["Release",            "Transformation", "Opening the hand. The deliberate side of unbecoming: letting a thing be unnecessary.", ["Attachment","The observer","Forgetting"]],
-  ["Reconstruction",     "Transformation", "A new coherence made from what remains. Provisional, like every one before it.", ["Recall","Rupture","Adaptation"]],
+  ["Self-image","Identity","The picture a person holds of who they are. Assembled from what others reflect back and what memory keeps.",["Perception","Retention","Beliefs"]],
+  ["Personality","Identity","The stable-seeming pattern of responses that others learn to expect. Stable because it repeats, not because it is fixed.",["Patterns","Learned behaviour","Adaptation"]],
+  ["Individuality","Identity","The sense of being distinct. It needs others to exist: a difference is always a difference from something.",["Relationships","Environment","Recognition"]],
+  ["The narrated self","Identity","The story a person tells about their life, edited at every retelling so that the present makes sense.",["Recall","Association","Interpretation"]],
+  ["Environment","Experience","Everything that surrounds a person before they have chosen anything: place, language, climate, class.",["Inheritance","Individuality","Attention"]],
+  ["Relationships","Experience","Other people, and what forms in the space between. Most of what a person believes about themselves began here.",["Individuality","Self-image","Attachment"]],
+  ["Events","Experience","What happens. Some events are absorbed without trace; others reorganise everything around them.",["Rupture","Retention","Interpretation"]],
+  ["Repetition","Experience","The same day many times. Repetition is how experience hardens into pattern and pattern into character.",["Patterns","Learned behaviour","Attention"]],
+  ["Thought","Cognition","The mind's commentary on experience. Fast, constant and easily mistaken for the experience itself.",["Interpretation","Observation","Beliefs"]],
+  ["Perception","Cognition","What reaches awareness after the senses and expectation have done their filtering. Never the whole picture.",["Attention","Self-image","Beliefs"]],
+  ["Interpretation","Cognition","The meaning assigned to what is perceived. Two people live through the same event and leave with different pasts.",["Thought","Events","The narrated self"]],
+  ["Attention","Cognition","Where the mind rests. Whatever receives attention grows; whatever does not slowly stops existing for us.",["Perception","Observation","Repetition"]],
+  ["Retention","Memory","What is kept. Not a recording but a selection, made by intensity, repetition and need.",["Events","Self-image","Forgetting"]],
+  ["Association","Memory","Memory's filing system: one thing recalled brings its neighbours. This is how the past organises the present.",["Recall","The narrated self","Patterns"]],
+  ["Recall","Memory","The act of remembering rebuilds the memory. Each return changes what is returned to.",["Association","The narrated self","Reconstruction"]],
+  ["Forgetting","Memory","Not a failure of memory but one of its functions. A self that forgot nothing could never change.",["Retention","Release","Dissolution"]],
+  ["Beliefs","Conditioning","Convictions absorbed before they could be examined. They feel like sight, not like a lens.",["Inheritance","Perception","Contradiction"]],
+  ["Patterns","Conditioning","Grooves worn by repetition. They save effort and cost possibility.",["Repetition","Personality","Resistance"]],
+  ["Learned behaviour","Conditioning","What was rewarded, repeated. What was punished, hidden. Much of character is a record of early consequences.",["Personality","Repetition","Adaptation"]],
+  ["Inheritance","Conditioning","What arrives through family, culture and era without asking. The oldest layer of the self.",["Environment","Beliefs","Attachment"]],
+  ["Attachment","Conditioning","What is held onto for safety: people, places, roles, certainties. The grip is the problem, not the thing.",["Relationships","Inheritance","Release"]],
+  ["Contradiction","Conflict","Two things held as true that cannot both be. The structure's first crack, and the beginning of its honesty.",["Beliefs","Uncertainty","Recognition"]],
+  ["Uncertainty","Conflict","Not knowing, without a frame to put it in. Unbearable to the old self, workable to the observing one.",["Contradiction","Reflection","Dissolution"]],
+  ["Resistance","Conflict","The old structure defending itself: arguing with evidence, delaying, explaining away.",["Patterns","Contradiction","Attachment"]],
+  ["Rupture","Conflict","An event too large to absorb. Loss, failure, revelation. It ends a version of the self whether or not the person agrees.",["Events","Dissolution","Reconstruction"]],
+  ["Observation","Awareness","Watching experience as it happens, without yet deciding what it means.",["Thought","Attention","The observer"]],
+  ["Recognition","Awareness","The moment a pattern becomes visible as a pattern. Nothing has changed yet, and everything has.",["Contradiction","Individuality","Reflection"]],
+  ["Reflection","Awareness","Turning experience over after it has passed. Where interpretation can be questioned instead of obeyed.",["Recognition","Uncertainty","Recall"]],
+  ["The observer","Awareness","The capacity that notices experience, interpretation and self-image alike. Not a thing in the picture; the one looking at it.",["Observation","Reflection","Release"]],
+  ["Adaptation","Transformation","Change in response to pressure. Most becoming happens here, quietly, without a decision.",["Personality","Learned behaviour","Environment"]],
+  ["Dissolution","Transformation","An identity, belief or attachment losing its hold. It rarely feels like freedom while it is happening.",["Rupture","Uncertainty","Forgetting"]],
+  ["Release","Transformation","Opening the hand. The deliberate side of unbecoming: letting a thing be unnecessary.",["Attachment","The observer","Forgetting"]],
+  ["Reconstruction","Transformation","A new coherence made from what remains. Provisional, like every one before it.",["Recall","Rupture","Adaptation"]],
 ];
 
 const QUESTIONS = [
-  ["If our beliefs change, are we still the same person?", "Depends what we mean by person. If a person is a set of beliefs, no. If a person is the capacity in which beliefs appear and are replaced, then the question dissolves: the capacity has not changed, only its contents."],
-  ["Does memory preserve identity or reconstruct it?", "Both, and the second more than we would like. Every act of remembering rebuilds the memory in the light of the present. We do not carry the past; we re-make it, and then mistake the copy for the original."],
-  ["Can we separate experience from the person experiencing it?", "In practice they arrive together. But the fact that an experience can be observed, named and questioned suggests that something in us is not identical to it. The separation is not a wall; it is a small distance that can be widened."],
-  ["Does letting go of an identity create a new identity?", "Usually, yes, and usually faster than we notice. The useful question is not how to avoid the new one but how lightly it can be held when it comes."],
-  ["Is transformation a destination or a continuous process?", "If it were a destination, someone would have arrived and stopped. No one has. Becoming and unbecoming do not take turns; they happen at once, in the same person, in the same hour."],
+  ["If our beliefs change, are we still the same person?","Depends what we mean by person. If a person is a set of beliefs, no. If a person is the capacity in which beliefs appear and are replaced, then the question dissolves: the capacity has not changed, only its contents."],
+  ["Does memory preserve identity or reconstruct it?","Both, and the second more than we would like. Every act of remembering rebuilds the memory in the light of the present. We do not carry the past; we re-make it, and then mistake the copy for the original."],
+  ["Can we separate experience from the person experiencing it?","In practice they arrive together. But the fact that an experience can be observed, named and questioned suggests that something in us is not identical to it. The separation is not a wall; it is a small distance that can be widened."],
+  ["Does letting go of an identity create a new identity?","Usually, yes, and usually faster than we notice. The useful question is not how to avoid the new one but how lightly it can be held when it comes."],
+  ["Is transformation a destination or a continuous process?","If it were a destination, someone would have arrived and stopped. No one has. Becoming and unbecoming do not take turns; they happen at once, in the same person, in the same hour."],
 ];
 
 const OBSERVER = {
@@ -357,86 +332,95 @@ const OBSERVER = {
   praise:   {threat:"If they knew how easy it was, the praise would vanish.", info:"What is easy for me is not easy for everyone. Useful to know.", story:"I am finally being seen the way I deserve.", passing:"Warmth. Pleasant, brief, and not information about my worth."},
 };
 
+// How the field behaves behind each section, as you scroll into it.
+// dist = camera distance, grow = how far strands extend (0-1), dim = overall brightness, core = nucleus size, labels = concept names visible
+const MOODS = {
+  hero:        {dist:58,  grow:1.0, dim:1.0, core:1.0, labels:1},
+  proposition: {dist:84,  grow:1.0, dim:.55, core:1.0, labels:0},
+  system:      {dist:52,  grow:1.0, dim:.75, core:.9,  labels:1},
+  dual:        {dist:70,  grow:1.0, dim:.6,  core:1.0, labels:0},   // grow is overridden by the slider
+  observer:    {dist:28,  grow:.35, dim:.7,  core:1.9, labels:0},
+  paradox:     {dist:130, grow:.85, dim:.5,  core:.8,  labels:0},
+  book:        {dist:64,  grow:1.0, dim:.6,  core:1.0, labels:0},
+};
+
 /* ═══════════════════════════════════════════════════════════════
-   THE FIELD  (Three.js) — nucleus centred, strands burst outward
+   THE FIELD
    ═══════════════════════════════════════════════════════════════ */
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const hero = document.getElementById("hero"), canvas = document.getElementById("c");
-const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const small = Math.min(innerWidth, innerHeight) < 700;      // lighter scene on phones
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({canvas, antialias:!small, powerPreference:"high-performance"});
+renderer.setPixelRatio(Math.min(devicePixelRatio, small ? 1.25 : 1.5));
 renderer.setClearColor(0x08090B, 1);
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 600);
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 700);
 const world = new THREE.Group(); scene.add(world);
 let seed = 23; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const hex = n => "#" + n.toString(16).padStart(6,"0");
+const lerp = (a,b,f) => a + (b-a)*f;
 
-// dust far away
+// dust
 {
-  const n = 1800, pos = new Float32Array(n*3);
-  for (let i=0;i<n;i++){ const r = 120 + rnd()*200, t = rnd()*6.2832, p = Math.acos(2*rnd()-1);
+  const n = small ? 700 : 1800, pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){ const r = 120 + rnd()*220, t = rnd()*6.2832, p = Math.acos(2*rnd()-1);
     pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.sin(p)*Math.sin(t); pos[i*3+2]=r*Math.cos(p); }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos,3));
   scene.add(new THREE.Points(g, new THREE.PointsMaterial({color:0xA99B83, size:.5, transparent:true, opacity:.5})));
 }
 
-// nucleus: a restrained ivory core with a bronze halo (shader, so it renders identically everywhere)
+// nucleus
 const nucleus = new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.ShaderMaterial({
   transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
-  uniforms:{ uHalo:{value:new THREE.Color(0xA99B83)}, uCore:{value:new THREE.Color(0xE5E2DA)}, uT:{value:0} },
+  uniforms:{ uHalo:{value:new THREE.Color(0xA99B83)}, uCore:{value:new THREE.Color(0xE5E2DA)}, uT:{value:0}, uDim:{value:1} },
   vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
-  fragmentShader:`varying vec2 vUv; uniform vec3 uHalo; uniform vec3 uCore; uniform float uT;
+  fragmentShader:`varying vec2 vUv; uniform vec3 uHalo; uniform vec3 uCore; uniform float uT; uniform float uDim;
     void main(){ float d=length(vUv-.5)*2.; float halo=pow(max(0.,1.-d),2.6)*.5; float core=pow(max(0.,1.-d*3.2),1.3)*(0.9+0.1*sin(uT));
-    gl_FragColor=vec4(uHalo*halo+uCore*core,1.); }`
+    gl_FragColor=vec4((uHalo*halo+uCore*core)*uDim,1.); }`
 }));
 world.add(nucleus);
 
-// the substrate: hundreds of fine filaments leaving the nucleus (the "burst")
-const FIL = 420, filPos = new Float32Array(FIL*2*3), filCol = new Float32Array(FIL*2*3), filBase = [];
+// filaments
+const FIL = small ? 200 : 420, filPos = new Float32Array(FIL*6), filCol = new Float32Array(FIL*6), filBase = [];
+const filMat = new THREE.LineBasicMaterial({vertexColors:true, transparent:true, opacity:1, blending:THREE.AdditiveBlending});
 {
   const c = new THREE.Color();
   for (let i=0;i<FIL;i++){
     const t = rnd()*6.2832, p = Math.acos(2*rnd()-1), r = 8 + Math.pow(rnd(),1.4)*34;
-    const d = new THREE.Vector3(Math.sin(p)*Math.cos(t), Math.sin(p)*Math.sin(t), Math.cos(p));
-    filBase.push({d, r, ph:rnd()*6.2832});
+    filBase.push({d:new THREE.Vector3(Math.sin(p)*Math.cos(t), Math.sin(p)*Math.sin(t), Math.cos(p)), r, ph:rnd()*6.2832});
     c.set(rnd()<.3 ? 0xA99B83 : 0xE5E2DA).multiplyScalar(.08 + rnd()*.22);
     filCol.set([c.r,c.g,c.b, c.r*.15,c.g*.15,c.b*.15], i*6);
   }
-  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(filPos,3)); g.setAttribute("color", new THREE.BufferAttribute(filCol,3));
-  world.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({vertexColors:true, transparent:true, opacity:1, blending:THREE.AdditiveBlending})));
 }
-var filGeo = world.children[world.children.length-1].geometry;
+const filGeo = new THREE.BufferGeometry(); filGeo.setAttribute("position", new THREE.BufferAttribute(filPos,3)); filGeo.setAttribute("color", new THREE.BufferAttribute(filCol,3));
+world.add(new THREE.LineSegments(filGeo, filMat));
 
-// concept strands: each leaves the nucleus, bends, and ends where its label sits
-const SEG = 72, byName = {};
+// strands
+const SEG = small ? 44 : 72, NFIB = small ? 1 : 2, byName = {};
 const labelsEl = document.getElementById("labels");
 const strands = CONCEPTS.map((c, i) => {
   const [name, fam] = c; byName[name] = i;
   const t = rnd()*6.2832, p = Math.acos(2*rnd()-1);
   const dir = new THREE.Vector3(Math.sin(p)*Math.cos(t), Math.sin(p)*Math.sin(t), Math.cos(p));
-  const reach = 16 + rnd()*14;
-  const bend = new THREE.Vector3(rnd()-.5, rnd()-.5, rnd()-.5).multiplyScalar(reach*.7);
+  const reach = 16 + rnd()*14, bend = new THREE.Vector3(rnd()-.5, rnd()-.5, rnd()-.5).multiplyScalar(reach*.7);
   const curve = new THREE.CubicBezierCurve3(new THREE.Vector3(), dir.clone().multiplyScalar(reach*.35).add(bend.clone().multiplyScalar(.4)), dir.clone().multiplyScalar(reach*.75).add(bend), dir.clone().multiplyScalar(reach).add(bend.clone().multiplyScalar(.5)));
-  const base = curve.getPoints(SEG);
-  const pos = new Float32Array((SEG+1)*3);
+  const base = curve.getPoints(SEG), pos = new Float32Array((SEG+1)*3);
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos,3)); g.setDrawRange(0,0);
   const m = new THREE.LineBasicMaterial({color:FAMILIES[fam], transparent:true, opacity:.75, blending:THREE.AdditiveBlending});
   world.add(new THREE.Line(g, m));
-  // two companion fibres so each concept reads as a bundle
-  const fibres = [0,1].map(q => {
+  const fibres = []; for (let q=0;q<NFIB;q++){
     const fp = new Float32Array((SEG+1)*3), fg = new THREE.BufferGeometry(); fg.setAttribute("position", new THREE.BufferAttribute(fp,3)); fg.setDrawRange(0,0);
     const fm = new THREE.LineBasicMaterial({color:FAMILIES[fam], transparent:true, opacity:.22, blending:THREE.AdditiveBlending});
     world.add(new THREE.Line(fg, fm));
-    return {pos:fp, g:fg, m:fm, off:new THREE.Vector3(rnd()-.5, rnd()-.5, rnd()-.5).multiplyScalar(1.6), ph:rnd()*6.2832};
-  });
-  const el = document.createElement("div"); el.className = "lbl";
-  el.innerHTML = `<span>${name}</span><small>${fam}</small>`;
+    fibres.push({pos:fp, g:fg, m:fm, off:new THREE.Vector3(rnd()-.5, rnd()-.5, rnd()-.5).multiplyScalar(1.6), ph:rnd()*6.2832});
+  }
+  const el = document.createElement("div"); el.className = "lbl"; el.innerHTML = `<span>${name}</span><small>${fam}</small>`;
   el.addEventListener("click", e => { e.stopPropagation(); openConcept(i); });
   labelsEl.appendChild(el);
-  return {i, name, fam, base, pos, g, m, fibres, el, tip:new THREE.Vector3(), grow:0, target:1, phase:rnd()*6.2832, freq:.3+rnd()*.4, retire:0};
+  return {i, name, fam, base, pos, g, m, fibres, el, tip:new THREE.Vector3(), grow:0, retire:1, retireAt:0, phase:rnd()*6.2832, freq:.3+rnd()*.4};
 });
 
-// connections (drawn only for the concept being explored)
+// connections
 const pairs = [];
 CONCEPTS.forEach((c,i) => c[3].forEach(r => { const j = byName[r]; if (j!==undefined && !pairs.some(([a,b]) => (a===i&&b===j)||(a===j&&b===i))) pairs.push([i,j]); }));
 const linkPos = new Float32Array(pairs.length*6), linkCol = new Float32Array(pairs.length*6);
@@ -447,9 +431,7 @@ world.add(new THREE.LineSegments(linkGeo, new THREE.LineBasicMaterial({vertexCol
 const panel = document.getElementById("panel"); let selected = -1, hot = -1;
 function openConcept(i){
   selected = i; const c = CONCEPTS[i];
-  document.getElementById("pCat").textContent = c[1];
-  document.getElementById("pName").textContent = c[0];
-  document.getElementById("pDef").textContent = c[2];
+  document.getElementById("pCat").textContent = c[1]; document.getElementById("pName").textContent = c[0]; document.getElementById("pDef").textContent = c[2];
   const rel = document.getElementById("pRel"); rel.innerHTML = "";
   c[3].forEach(r => { const b = document.createElement("button"); b.textContent = r; b.addEventListener("click", () => openConcept(byName[r])); rel.appendChild(b); });
   panel.hidden = false;
@@ -457,116 +439,113 @@ function openConcept(i){
 document.getElementById("panelClose").addEventListener("click", () => { panel.hidden = true; selected = -1; });
 addEventListener("keydown", e => { if (e.key==="Escape"){ panel.hidden = true; selected = -1; } });
 
-// orbit + zoom, only when the pointer is on the field
-let rotX = .12, rotY = .5, targetDist = 58, dist = 260, dragging=false, dragged=false, lx=0, ly=0, pinch0=0;
+// orbit (drag), zoom (buttons / pinch). The wheel is left alone so the page always scrolls.
+let rotX = .12, rotY = .5, userZoom = 1, dragging=false, dragged=false, lx=0, ly=0, pinch0=0, pointerDown=false;
 const mouse = {x:-1e4, y:-1e4};
-canvas.addEventListener("pointerdown", e => { dragging=true; dragged=false; lx=e.clientX; ly=e.clientY; canvas.setPointerCapture(e.pointerId); });
-canvas.addEventListener("pointermove", e => {
-  const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+addEventListener("pointerdown", e => { if (e.target !== canvas && !e.target.closest("#hero")) return; pointerDown=true; dragging=true; dragged=false; lx=e.clientX; ly=e.clientY; });
+addEventListener("pointermove", e => {
+  mouse.x = e.clientX; mouse.y = e.clientY;
   if (!dragging) return;
   const dx=e.clientX-lx, dy=e.clientY-ly; if (Math.abs(dx)+Math.abs(dy)>3) dragged=true;
   rotY += dx*.005; rotX = Math.max(-1.3, Math.min(1.3, rotX + dy*.005)); lx=e.clientX; ly=e.clientY;
 });
-canvas.addEventListener("pointerleave", () => { mouse.x = mouse.y = -1e4; });
-addEventListener("pointerup", () => dragging=false);
-canvas.addEventListener("click", () => { if (!dragged && entered) { panel.hidden = true; selected = -1; } });
-canvas.addEventListener("wheel", e => { if (!entered) return; e.preventDefault(); targetDist = Math.max(18, Math.min(140, targetDist*(1+Math.sign(e.deltaY)*.08))); }, {passive:false});
-canvas.addEventListener("touchmove", e => { if (e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY); if (pinch0) targetDist = Math.max(18, Math.min(140, targetDist*pinch0/d)); pinch0=d; } }, {passive:true});
-canvas.addEventListener("touchend", () => pinch0=0);
+addEventListener("pointerup", () => { dragging=false; pointerDown=false; });
+document.getElementById("hero").addEventListener("click", () => { if (!dragged && entered) { panel.hidden = true; selected = -1; } });
+document.getElementById("zin").addEventListener("click", () => userZoom = Math.max(.4, userZoom*.8));
+document.getElementById("zout").addEventListener("click", () => userZoom = Math.min(2.4, userZoom*1.25));
+addEventListener("touchmove", e => { if (e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY); if (pinch0) userZoom = Math.max(.4, Math.min(2.4, userZoom*pinch0/d)); pinch0=d; } }, {passive:true});
+addEventListener("touchend", () => pinch0=0);
 
-// entering: the camera falls toward the nucleus and the strands leave it
+// entering
 let entered = false, growAll = 0;
 document.getElementById("enter").addEventListener("click", enter);
-function enter(){
-  entered = true;
-  document.getElementById("opening").classList.add("gone");
-  document.getElementById("hud").classList.add("show");
-  if (reduce){ dist = targetDist; growAll = 1; }
+function enter(){ if (entered) return; entered = true; document.getElementById("opening").classList.add("gone"); document.getElementById("hud").classList.add("show"); if (reduce){ growAll = 1; dist = 58; } }
+addEventListener("scroll", () => { if (!entered && scrollY > innerHeight*.25) enter(); }, {passive:true});
+
+// sizing: the canvas always matches the window exactly, so the nucleus is always dead centre
+function resize(){ const w = innerWidth, h = innerHeight; renderer.setSize(w,h,true); canvas.style.width = w+"px"; canvas.style.height = h+"px"; camera.aspect = w/h; camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+// scroll → which mood, blended smoothly between neighbouring sections
+const sectionEls = ["hero","proposition","system","dual","observer","paradox","book"].map(id => document.getElementById(id));
+const bias = document.getElementById("bias");
+const mood = {dist:260, grow:0, dim:1, core:1, labels:1};
+function targetMood(){
+  const y = scrollY + innerHeight*.5;
+  let i = 0; for (let k=0;k<sectionEls.length;k++){ if (y >= sectionEls[k].offsetTop) i = k; }
+  const a = sectionEls[i], b = sectionEls[Math.min(i+1, sectionEls.length-1)];
+  const f = Math.max(0, Math.min(1, (y - a.offsetTop) / Math.max(1, a.offsetHeight)));
+  const t = f < .55 ? 0 : (f-.55)/.45; const s = t*t*(3-2*t);
+  const ma = {...MOODS[a.id]}, mb = {...MOODS[b.id]};
+  if (a.id==="dual") ma.grow = 1 - (+bias.value)*.7; if (b.id==="dual") mb.grow = 1 - (+bias.value)*.7;
+  return {dist:lerp(ma.dist,mb.dist,s), grow:lerp(ma.grow,mb.grow,s), dim:lerp(ma.dim,mb.dim,s), core:lerp(ma.core,mb.core,s), labels:lerp(ma.labels,mb.labels,s), scroll: scrollY/Math.max(1, document.body.scrollHeight-innerHeight)};
 }
 
-function resize(){
-  const w = hero.clientWidth, h = hero.clientHeight;
-  renderer.setSize(w, h, true);                       // sets the drawing buffer AND the canvas CSS size
-  canvas.style.width = w + "px"; canvas.style.height = h + "px";
-  camera.aspect = w / h; camera.updateProjectionMatrix();
-}
-addEventListener("resize", resize);
-new ResizeObserver(resize).observe(hero);             // also when the frame around the page changes size
-resize();
-
-// the field breathes: every few seconds one concept quietly withdraws, then returns (unbecoming inside becoming)
-let nextRetire = 6;
+let dist = 260, nextRetire = 6, last = performance.now(), time = 0;
 const tmp = new THREE.Vector3(), col = new THREE.Color();
-let last = performance.now(), time = 0;
 function frame(now){
   requestAnimationFrame(frame);
   const dt = Math.min(.05, (now-last)/1000); last = now; time += dt;
-  const heroVisible = hero.getBoundingClientRect().bottom > 0;
-  if (!heroVisible) return;
+  if (document.hidden) return;
 
   if (entered) growAll = Math.min(1, growAll + dt/4.5);
   const ease = 1 - Math.pow(1-growAll, 3);
-  dist += ((entered ? targetDist : 260) - dist) * (entered ? .035 : .01);
-  if (!dragging) rotY += dt * .03;
-  camera.position.set(Math.sin(rotY)*Math.cos(rotX)*dist, Math.sin(rotX)*dist, Math.cos(rotY)*Math.cos(rotX)*dist);
+  const tm = targetMood();
+  const k = 1 - Math.pow(.04, dt);        // frame-rate independent smoothing
+  mood.grow += (tm.grow - mood.grow)*k; mood.dim += (tm.dim - mood.dim)*k; mood.core += (tm.core - mood.core)*k; mood.labels += (tm.labels - mood.labels)*k;
+  dist += ((entered ? tm.dist*userZoom : 260) - dist) * (entered ? k : k*.3);
+  if (!dragging) rotY += dt*.03;
+  const scrollTurn = tm.scroll * 2.2;    // the whole field turns as you travel down the page
+  const ry = rotY + scrollTurn, rx = rotX + Math.sin(tm.scroll*3.1)*.25;
+  camera.position.set(Math.sin(ry)*Math.cos(rx)*dist, Math.sin(rx)*dist, Math.cos(ry)*Math.cos(rx)*dist);
   camera.lookAt(0,0,0);
   nucleus.quaternion.copy(camera.quaternion);
-  nucleus.scale.setScalar(entered ? 7 + ease*4 : 5);
-  nucleus.material.uniforms.uT.value = time*1.2;
+  nucleus.scale.setScalar((entered ? 7 + ease*4 : 5) * mood.core);
+  nucleus.material.uniforms.uT.value = time*1.2; nucleus.material.uniforms.uDim.value = mood.dim;
 
-  // filaments drift
-  for (let i=0;i<FIL;i++){ const f = filBase[i]; const r = f.r * (.3 + .7*ease) * (1 + .04*Math.sin(time*.4+f.ph));
+  for (let i=0;i<FIL;i++){ const f = filBase[i]; const r = f.r*(.3+.7*ease)*(1+.04*Math.sin(time*.4+f.ph));
     filPos[i*6+3] = f.d.x*r + Math.sin(time*.2+f.ph)*.6; filPos[i*6+4] = f.d.y*r + Math.cos(time*.17+f.ph)*.6; filPos[i*6+5] = f.d.z*r; }
-  filGeo.attributes.position.needsUpdate = true;
+  filGeo.attributes.position.needsUpdate = true; filMat.opacity = mood.dim;
 
-  // one strand retires at a time
-  if (entered && !reduce && time > nextRetire){ const s = strands[Math.floor(rnd()*strands.length)]; if (s.target===1){ s.target = .12; s.retire = time; } nextRetire = time + 5 + rnd()*5; }
-  strands.forEach(s => { if (s.target < 1 && time - s.retire > 7) s.target = 1; });
+  if (entered && !reduce && time > nextRetire){ const s = strands[Math.floor(rnd()*strands.length)]; if (s.retire===1){ s.retire = .12; s.retireAt = time; } nextRetire = time + 5 + rnd()*5; }
+  strands.forEach(s => { if (s.retire < 1 && time - s.retireAt > 7) s.retire = 1; });
 
-  // hover: nearest label to the pointer
   hot = -1; let hotD = 34;
-  const w = hero.clientWidth, h = hero.clientHeight;
+  const w = innerWidth, h = innerHeight;
   strands.forEach(s => {
-    s.grow += ((s.target * ease) - s.grow) * .025;
-    const n = Math.max(2, Math.round(s.grow*SEG));
-    s.g.setDrawRange(0,n);
-    for (let k=0;k<=SEG;k++){
-      const b = s.base[k], f = k/SEG;
+    s.grow += ((s.retire * ease * mood.grow) - s.grow) * .025;
+    const n = Math.max(2, Math.round(s.grow*SEG)); s.g.setDrawRange(0,n);
+    for (let q=0;q<=SEG;q++){
+      const b = s.base[q], f = q/SEG;
       tmp.copy(b);
-      tmp.x += Math.sin(time*s.freq + s.phase + f*4) * f * .8;
-      tmp.y += Math.cos(time*s.freq*.8 + s.phase + f*3) * f * .7;
-      tmp.z += Math.sin(time*s.freq*.6 + s.phase*1.3 + f*3) * f * .5;
-      s.pos[k*3]=tmp.x; s.pos[k*3+1]=tmp.y; s.pos[k*3+2]=tmp.z;
-      s.fibres.forEach((fb,q) => { const sp = .15 + f*1.1, wv = Math.sin(time*.5+fb.ph+f*5+q)*.4;
-        fb.pos[k*3]=tmp.x+fb.off.x*sp+wv; fb.pos[k*3+1]=tmp.y+fb.off.y*sp+Math.cos(time*.4+fb.ph+f*4)*.4; fb.pos[k*3+2]=tmp.z+fb.off.z*sp; });
+      tmp.x += Math.sin(time*s.freq + s.phase + f*4)*f*.8; tmp.y += Math.cos(time*s.freq*.8 + s.phase + f*3)*f*.7; tmp.z += Math.sin(time*s.freq*.6 + s.phase*1.3 + f*3)*f*.5;
+      s.pos[q*3]=tmp.x; s.pos[q*3+1]=tmp.y; s.pos[q*3+2]=tmp.z;
+      s.fibres.forEach((fb,z) => { const sp = .15+f*1.1, wv = Math.sin(time*.5+fb.ph+f*5+z)*.4;
+        fb.pos[q*3]=tmp.x+fb.off.x*sp+wv; fb.pos[q*3+1]=tmp.y+fb.off.y*sp+Math.cos(time*.4+fb.ph+f*4)*.4; fb.pos[q*3+2]=tmp.z+fb.off.z*sp; });
     }
     s.g.attributes.position.needsUpdate = true;
     s.fibres.forEach(fb => { fb.g.setDrawRange(0,n); fb.g.attributes.position.needsUpdate = true; });
-    const k = Math.min(SEG, n-1);
-    s.tip.set(s.pos[k*3], s.pos[k*3+1], s.pos[k*3+2]);
+    const e = Math.min(SEG, n-1); s.tip.set(s.pos[e*3], s.pos[e*3+1], s.pos[e*3+2]);
     tmp.copy(s.tip).project(camera);
     const x = (tmp.x*.5+.5)*w, y = (-tmp.y*.5+.5)*h, behind = tmp.z > 1;
-    const depth = THREE.MathUtils.clamp(1 - (tmp.z - .975)/.025, .4, 1);
-    const vis = behind ? 0 : Math.max(0, (s.grow - .5) * 2) * depth * (entered ? 1 : 0);
+    const depth = THREE.MathUtils.clamp(1 - (tmp.z-.975)/.025, .4, 1);
+    const vis = behind ? 0 : Math.max(0, (s.grow-.5)*2) * depth * (entered ? 1 : 0) * mood.labels;
     s.el.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%)`;
-    s.el.style.opacity = vis;
-    s.el.style.pointerEvents = vis > .4 ? "auto" : "none";
+    s.el.style.opacity = vis; s.el.style.pointerEvents = vis > .4 ? "auto" : "none";
     if (vis > .4){ const d = Math.hypot(x-mouse.x, y-mouse.y); if (d < hotD){ hotD = d; hot = s.i; } }
   });
   const focus = selected >= 0 ? selected : hot;
   strands.forEach(s => {
     const on = s.i===focus, near = focus>=0 && CONCEPTS[focus][3].includes(s.name);
     s.el.classList.toggle("hot", on);
-    s.m.opacity = on ? 1 : near ? .95 : focus>=0 ? .3 : .75;
-    s.fibres.forEach(fb => fb.m.opacity = on||near ? .4 : focus>=0 ? .08 : .22);
+    s.m.opacity = (on ? 1 : near ? .95 : focus>=0 ? .3 : .75) * mood.dim;
+    s.fibres.forEach(fb => fb.m.opacity = (on||near ? .4 : focus>=0 ? .08 : .22) * mood.dim);
   });
-  // connections only around the explored concept
   pairs.forEach(([a,b],q) => {
-    const show = focus>=0 && (a===focus||b===focus) ? 1 : 0;
-    const sa = strands[a], sb = strands[b];
+    const show = focus>=0 && (a===focus||b===focus) ? .7 : 0, sa = strands[a], sb = strands[b];
     linkPos.set([sa.tip.x,sa.tip.y,sa.tip.z, sb.tip.x,sb.tip.y,sb.tip.z], q*6);
-    col.set(FAMILIES[sa.fam]).multiplyScalar(show*.7); linkCol.set([col.r,col.g,col.b], q*6);
-    col.set(FAMILIES[sb.fam]).multiplyScalar(show*.7); linkCol.set([col.r,col.g,col.b], q*6+3);
+    col.set(FAMILIES[sa.fam]).multiplyScalar(show); linkCol.set([col.r,col.g,col.b], q*6);
+    col.set(FAMILIES[sb.fam]).multiplyScalar(show); linkCol.set([col.r,col.g,col.b], q*6+3);
   });
   linkGeo.attributes.position.needsUpdate = true; linkGeo.attributes.color.needsUpdate = true;
   renderer.render(scene, camera);
@@ -574,70 +553,52 @@ function frame(now){
 requestAnimationFrame(frame);
 
 /* ═══════════════════════════════════════════════════════════════
-   THE PAGE BELOW THE FIELD
+   THE PAGE
    ═══════════════════════════════════════════════════════════════ */
-// counts
 document.querySelectorAll("#sysCount,#footCount").forEach(e => e.textContent = CONCEPTS.length);
-document.getElementById("hudCount").textContent = `${CONCEPTS.length} concepts · ${Object.keys(FAMILIES).length} families`;
 
-// concept index → opens the concept in the field and scrolls up to it
 const index = document.getElementById("index");
 Object.keys(FAMILIES).forEach(fam => {
-  const box = document.createElement("div"); const h = document.createElement("h4"); h.textContent = fam; h.style.color = hex(FAMILIES[fam]); box.appendChild(h);
+  const box = document.createElement("div"), hd = document.createElement("h4"); hd.textContent = fam; hd.style.color = hex(FAMILIES[fam]); box.appendChild(hd);
   const ul = document.createElement("ul");
-  CONCEPTS.forEach((c,i) => { if (c[1]!==fam) return; const li = document.createElement("li"); const b = document.createElement("button"); b.textContent = c[0];
-    b.addEventListener("click", () => { if (!entered) enter(); openConcept(i); hero.scrollIntoView({behavior: reduce ? "auto" : "smooth"}); }); li.appendChild(b); ul.appendChild(li); });
+  CONCEPTS.forEach((c,i) => { if (c[1]!==fam) return; const li = document.createElement("li"), b = document.createElement("button"); b.textContent = c[0];
+    b.addEventListener("click", () => { enter(); openConcept(i); }); li.appendChild(b); ul.appendChild(li); });
   box.appendChild(ul); index.appendChild(box);
 });
 
-// becoming / unbecoming: a 2D field where points connect (left) or let go (right)
+// becoming / unbecoming (2D). Strokes are batched by opacity so it stays smooth on phones.
 {
-  const cv = document.getElementById("dualc"), ctx = cv.getContext("2d"), bias = document.getElementById("bias");
-  const P = []; for (let i=0;i<90;i++) P.push({x:Math.random(), y:Math.random(), vx:(Math.random()-.5)*.0006, vy:(Math.random()-.5)*.0006, a:Math.random()});
-  let W=0, H=0;
-  function size(){ const r = cv.getBoundingClientRect(); W = cv.width = Math.round(r.width*devicePixelRatio); H = cv.height = Math.round(r.height*devicePixelRatio); }
+  const cv = document.getElementById("dualc"), ctx = cv.getContext("2d");
+  const N = small ? 50 : 84, P = []; for (let i=0;i<N;i++) P.push({x:Math.random(), y:Math.random(), vx:(Math.random()-.5)*.0006, vy:(Math.random()-.5)*.0006, a:Math.random()});
+  let W=0, H=0; const dpr = Math.min(devicePixelRatio, 1.5);
+  function size(){ const r = cv.getBoundingClientRect(); W = cv.width = Math.round(r.width*dpr); H = cv.height = Math.round(r.height*dpr); }
   addEventListener("resize", size); size();
+  const buckets = Array.from({length:8}, () => []);
   function draw(){
     requestAnimationFrame(draw);
-    if (cv.getBoundingClientRect().top > innerHeight || cv.getBoundingClientRect().bottom < 0) return;
-    const b = +bias.value;                 // 0 = becoming, 1 = unbecoming
-    const alive = Math.round(90 - b*62);   // how many points are present
-    const reach = (0.16 - b*0.09) * Math.max(W,H);
+    const r = cv.getBoundingClientRect(); if (r.top > innerHeight || r.bottom < 0 || document.hidden) return;
+    const b = +bias.value, alive = Math.round(N - b*(N*.7)), reach = (0.17 - b*0.09)*Math.max(W,H);
     ctx.fillStyle = "#17191D"; ctx.fillRect(0,0,W,H);
-    P.forEach((p,i) => { if (!reduce){ p.x += p.vx; p.y += p.vy; if (p.x<0||p.x>1) p.vx*=-1; if (p.y<0||p.y>1) p.vy*=-1; }
-      p.a += ((i < alive ? 1 : 0) - p.a) * .03; });
+    P.forEach((p,i) => { if (!reduce){ p.x += p.vx; p.y += p.vy; if (p.x<0||p.x>1) p.vx*=-1; if (p.y<0||p.y>1) p.vy*=-1; } p.a += ((i<alive?1:0)-p.a)*.03; });
+    buckets.forEach(k => k.length = 0);
+    for (let i=0;i<N;i++) for (let j=i+1;j<N;j++){ const a=P[i], c=P[j], d=Math.hypot((a.x-c.x)*W,(a.y-c.y)*H);
+      if (d < reach){ const o = (1-d/reach)*Math.min(a.a,c.a)*(0.55-b*0.3); buckets[Math.min(7, Math.floor(o*14))].push(a.x*W,a.y*H,c.x*W,c.y*H); } }
     ctx.lineWidth = 1;
-    for (let i=0;i<P.length;i++) for (let j=i+1;j<P.length;j++){
-      const a = P[i], c = P[j], d = Math.hypot((a.x-c.x)*W, (a.y-c.y)*H);
-      if (d < reach){ const o = (1 - d/reach) * Math.min(a.a, c.a) * (0.55 - b*0.3);
-        ctx.strokeStyle = `rgba(169,155,131,${o})`; ctx.beginPath(); ctx.moveTo(a.x*W,a.y*H); ctx.lineTo(c.x*W,c.y*H); ctx.stroke(); }
-    }
-    P.forEach(p => { ctx.fillStyle = `rgba(229,226,218,${.75*p.a})`; ctx.beginPath(); ctx.arc(p.x*W, p.y*H, 1.4*devicePixelRatio, 0, 6.2832); ctx.fill(); });
+    buckets.forEach((k,idx) => { if (!k.length) return; ctx.strokeStyle = `rgba(169,155,131,${(idx+.5)/14})`; ctx.beginPath(); for (let z=0;z<k.length;z+=4){ ctx.moveTo(k[z],k[z+1]); ctx.lineTo(k[z+2],k[z+3]); } ctx.stroke(); });
+    ctx.fillStyle = "rgba(229,226,218,.75)"; ctx.beginPath(); P.forEach(p => { if (p.a < .05) return; ctx.moveTo(p.x*W+1.4*dpr, p.y*H); ctx.arc(p.x*W, p.y*H, 1.4*dpr*p.a, 0, 6.2832); }); ctx.fill();
   }
   draw();
 }
 
-// observer
-{
-  const exp = document.getElementById("exp"), interp = document.getElementById("interp"), out = document.getElementById("obsOut");
-  const upd = () => out.textContent = OBSERVER[exp.value][interp.value];
-  exp.addEventListener("change", upd); interp.addEventListener("change", upd); upd();
-}
+{ const exp = document.getElementById("exp"), interp = document.getElementById("interp"), out = document.getElementById("obsOut");
+  const upd = () => out.textContent = OBSERVER[exp.value][interp.value]; exp.addEventListener("change", upd); interp.addEventListener("change", upd); upd(); }
 
-// paradox
-{
-  const qs = document.getElementById("questions");
-  QUESTIONS.forEach(([q,a]) => {
-    const d = document.createElement("div"); d.className = "q";
+{ const qs = document.getElementById("questions");
+  QUESTIONS.forEach(([q,a]) => { const d = document.createElement("div"); d.className = "q";
     d.innerHTML = `<button aria-expanded="false">${q}</button><div class="a"><p>${a}</p></div>`;
     d.querySelector("button").addEventListener("click", () => { const open = d.classList.toggle("open"); d.querySelector("button").setAttribute("aria-expanded", open); });
-    qs.appendChild(d);
-  });
-}
+    qs.appendChild(d); }); }
 
-// section reveals
-{
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.12});
-  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
-}
+{ const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold:.1});
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el)); }
 </script>
