@@ -1,0 +1,378 @@
+<title>The Art of Becoming and Unbecoming</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@300;400&display=swap">
+<style>
+/* Layout: a full-screen 3D field; a quiet serif voice top-left; the five-stage cycle as a scrubber along the bottom; one reading card. Single dark world by choice. */
+:root{
+  --bg:#07070b;            /* ink */
+  --fg:#e6e1d8;            /* warm paper-white */
+  --muted:#7d7a85;         /* dimmed labels */
+  --line:rgba(230,225,216,.14);
+  --accent:#d9a86c;        /* candle amber (Becoming) */
+  --display:"Cormorant Garamond",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);overflow:hidden;font-weight:300}
+canvas{position:fixed;inset:0;display:block}
+#labels{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-family:var(--display);font-size:15px;font-weight:300;letter-spacing:.02em;pointer-events:auto;cursor:pointer;will-change:transform,opacity;text-shadow:0 0 12px rgba(0,0,0,.9)}
+.lbl small{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+.lbl.hot{z-index:5}.lbl.hot span{border-bottom:1px solid currentColor}
+.hud{position:fixed;z-index:6;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.hud.tl{top:calc(env(safe-area-inset-top,0px) + 20px);left:max(20px,env(safe-area-inset-left,0px));max-width:min(420px,calc(100vw - 40px))}
+.hud.tl h1{font-family:var(--display);font-weight:300;font-size:30px;line-height:1.05;margin:0 0 10px;letter-spacing:0;text-transform:none;color:var(--fg);text-wrap:balance}
+.hud.tl h1 em{font-style:italic;color:var(--accent)}
+.hud.tl p{margin:0;font-family:var(--display);font-size:16px;line-height:1.4;letter-spacing:0;text-transform:none;color:var(--fg);opacity:.75;max-width:34ch}
+.hud.tr{top:calc(env(safe-area-inset-top,0px) + 22px);right:max(20px,env(safe-area-inset-right,0px));display:flex;gap:10px}
+.hud.bot{bottom:calc(env(safe-area-inset-bottom,0px) + 20px);left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px))}
+#stages{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-bottom:14px}
+#stages::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
+#bar{position:absolute;left:0;top:0;height:1px;background:var(--accent);width:0;transition:none}
+.stage{background:none;border:0;border-radius:0;padding:14px 0 0;text-align:left;color:var(--muted);font:inherit;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;backdrop-filter:none}
+.stage b{display:block;font-family:var(--display);font-weight:300;font-size:20px;letter-spacing:0;text-transform:none;color:var(--muted);transition:color .4s}
+.stage.on b{color:var(--fg)}
+.stage i{display:block;font-style:normal;font-family:var(--display);font-size:13px;letter-spacing:0;text-transform:none;opacity:0;max-height:0;overflow:hidden;transition:opacity .4s}
+.stage.on i{opacity:.7;max-height:60px}
+.hints{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;line-height:1.8}
+button{font:inherit;letter-spacing:.16em;text-transform:uppercase;color:var(--fg);background:rgba(10,10,16,.7);border:1px solid var(--line);border-radius:999px;padding:11px 18px;cursor:pointer;backdrop-filter:blur(8px)}
+button:hover,button:focus-visible{border-color:var(--fg);outline:none}
+#card{position:fixed;right:max(20px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);width:min(320px,calc(100vw - 40px));background:rgba(9,9,14,.84);border:1px solid var(--line);border-radius:4px;padding:22px 24px;z-index:7;backdrop-filter:blur(10px)}
+#card h2{font-family:var(--display);font-weight:300;font-size:28px;margin:0 0 2px;line-height:1.1}
+#card .dim{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+#card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:11px;line-height:1.6}
+#card dt{color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-size:9px;padding-top:2px}
+#card dd{margin:0;font-family:var(--display);font-size:15px;line-height:1.35}
+#card .close{position:absolute;top:10px;right:12px;padding:6px 10px;border:0;background:none;color:var(--muted)}
+@media (max-width:640px){
+  .hud.tl h1{font-size:24px}.hud.tl p{display:none}
+  .stage b{font-size:14px}.stage i{display:none}
+  #card{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 120px);transform:none;left:max(20px,env(safe-area-inset-left,0px));right:max(20px,env(safe-area-inset-right,0px));width:auto}
+  .lbl{font-size:12px}.hints{display:none}
+}
+</style>
+
+<canvas id="c"></canvas>
+<div id="labels"></div>
+
+<div class="hud tl">
+  <h1>The Art of <em>Becoming</em> and <em>Unbecoming</em></h1>
+  <p>A person is not a fixed identity. What follows forms, tangles, breaks, lets go, and begins again. It never finishes.</p>
+</div>
+
+<div class="hud tr">
+  <button id="play">Pause</button>
+</div>
+
+<div class="hud bot">
+  <div id="stages"><div id="bar"></div></div>
+  <div class="hints"><span>Drag to turn · Scroll to come closer · Rest on a word to read it · Click a stage to go there</span><span id="count"></span></div>
+</div>
+
+<div id="card" hidden>
+  <button class="close" id="close">Close</button>
+  <h2 id="cName"></h2>
+  <div class="dim" id="cDim"></div>
+  <dl>
+    <dt>Stage</dt><dd id="cStage"></dd>
+    <dt>Input</dt><dd id="cInput"></dd>
+    <dt>Trigger</dt><dd id="cTrigger"></dd>
+    <dt>Process</dt><dd id="cProcess"></dd>
+    <dt>Outcome</dt><dd id="cOutcome"></dd>
+    <dt>Related</dt><dd id="cRel"></dd>
+  </dl>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   1. THE BOOK'S STRUCTURE  — edit these three blocks.
+   ═══════════════════════════════════════════════════════════════ */
+
+// The five stages of the cycle. Each has a name and one line.
+const STAGES = [
+  ["Formation",      "An identity takes shape through biology, environment, conditioning and experience."],
+  ["Accumulation",   "Experiences, memories, beliefs and attachments knot into something dense."],
+  ["Contradiction",  "What we believe meets what we now know. The structure shakes."],
+  ["Dissolution",    "Identities, assumptions and attachments lose their hold and loosen."],
+  ["Reconstruction", "A new understanding appears. The process begins again."],
+];
+
+// The nine strands. colour, and how present each is in the five stages (0 = absent, 1 = full).
+//                 name            colour     Form  Accum Contr Diss  Recon
+const DIMENSIONS = [
+  ["Identity",      0xc9c3d9,   [0.60, 0.90, 0.85, 0.45, 0.70]],
+  ["Experience",    0x8fb3c7,   [0.55, 1.00, 0.90, 0.70, 0.80]],
+  ["Memory",        0x7f86b8,   [0.30, 0.90, 0.80, 0.60, 0.60]],
+  ["Conditioning",  0x6a5f9e,   [1.00, 0.80, 0.60, 0.20, 0.30]],
+  ["Attachment",    0xb07aa0,   [0.30, 0.95, 0.90, 0.15, 0.40]],
+  ["Conflict",      0xd4584e,   [0.10, 0.40, 1.00, 0.70, 0.20]],
+  ["Awareness",     0xe9d9a8,   [0.10, 0.20, 0.60, 0.90, 1.00]],
+  ["Unbecoming",    0xf0ece4,   [0.00, 0.10, 0.50, 1.00, 0.50]],
+  ["Becoming",      0xd9a86c,   [0.80, 0.60, 0.30, 0.40, 1.00]],
+];
+
+// The concepts. One line each:
+// [ concept, dimension, stage(0-4), input, trigger, process, outcome, [related concept names] ]
+// These are placeholders written from the outline. Replace them with the book's own ideas.
+const CONCEPTS = [
+  // Identity
+  ["The given name",            0, 0, "Family, place, language",        "Being addressed",             "Answering to it",            "A first outline of a self",         ["Inherited beliefs","The remembered self"]],
+  ["The story we tell",         0, 1, "Chosen memories",                "Being asked who we are",       "Editing the past into a line","A coherent, partial self",          ["The remembered self","Roles we perform"]],
+  ["Roles we perform",          0, 2, "Expectations of others",         "A role that no longer fits",   "Noticing the performance",   "Distance between self and role",    ["Belonging","Watching the watcher"]],
+  ["The self that remains",     0, 4, "What survived the loosening",    "Having let go",                "Living without a fixed story","An identity held lightly",         ["Release","Beginning again"]],
+  // Experience
+  ["First encounters",          1, 0, "The world as it arrives",        "Novelty",                      "Sensing before naming",      "Raw material for a self",           ["The given name","Imprint"]],
+  ["Repetition",                1, 1, "Days that resemble each other",  "Habit",                        "Doing without deciding",     "Experience hardens into pattern",   ["Habits of mind","Comfort"]],
+  ["The unexpected event",      1, 2, "Something that doesn't fit",     "Loss, chance, rupture",        "Being unable to look away",  "The pattern is interrupted",        ["The crack","Grief"]],
+  ["Living the question",       1, 3, "Uncertainty",                    "No answer arriving",           "Staying with not-knowing",   "Experience without a frame",        ["Witnessing","Release"]],
+  // Memory
+  ["Imprint",                   2, 0, "Early sensation",                "Intensity",                    "Encoding without words",     "Memories we can't recall but carry",["First encounters","Inherited beliefs"]],
+  ["The remembered self",       2, 1, "Stories retold",                 "Being asked to remember",      "Reconstruction at each recall","A past that shifts to serve the present",["The story we tell","Nostalgia"]],
+  ["Selective forgetting",      2, 3, "Memories that no longer serve",  "Change in who we are",         "Letting a memory lose weight","The past loosens its grip",        ["Release","Living the question"]],
+  ["Memory as material",        2, 4, "Everything carried",             "A new understanding",          "Re-reading the past",        "The same past, a different meaning",["The self that remains","Beginning again"]],
+  // Conditioning
+  ["Inherited beliefs",         3, 0, "Family, culture, era",           "Being taught before asking",   "Absorption",                 "Convictions mistaken for facts",    ["The given name","Imprint"]],
+  ["Habits of mind",            3, 1, "Repeated thoughts",              "Reward and relief",            "Automatic interpretation",   "A way of seeing that feels like sight",["Repetition","Comfort"]],
+  ["Seeing the frame",          3, 2, "A belief exposed as a belief",   "Contact with difference",      "Noticing the lens",          "Conditioning becomes visible",      ["The crack","Watching the watcher"]],
+  ["Unlearning",                3, 3, "A belief held too long",         "Its cost becomes clear",       "Practising a different response","The frame thins",               ["Release","Awareness of change"]],
+  // Attachment
+  ["Belonging",                 4, 0, "People, places, groups",         "Being included",               "Identifying with",           "Safety, and a self defined by others",["Roles we perform","Comfort"]],
+  ["Comfort",                   4, 1, "The familiar",                   "Fear of loss",                 "Holding tighter",            "Attachment disguised as need",      ["Repetition","Habits of mind"]],
+  ["Grief",                     4, 2, "Something or someone lost",      "Absence",                      "Feeling the pull of what's gone","The shape of what we were attached to",["The unexpected event","The crack"]],
+  ["Release",                   4, 3, "What we were holding",           "Exhaustion or clarity",        "Opening the hand",           "Space where the grip was",          ["Unlearning","Selective forgetting","The self that remains"]],
+  // Conflict
+  ["Dissonance",                5, 1, "Two beliefs that can't both be true","Noticing the gap",         "Rationalising",              "A quiet, growing pressure",         ["Habits of mind","The crack"]],
+  ["The crack",                 5, 2, "A truth that won't fit",         "Evidence, pain, another person","Resisting, then failing to resist","The structure gives",         ["Dissonance","The unexpected event","Seeing the frame"]],
+  ["Resistance",                5, 2, "The old self defending itself",  "Threat of change",             "Arguing with reality",       "Delay, and more pressure",          ["Comfort","Dissonance"]],
+  ["Tension as teacher",        5, 3, "Conflict that stays",            "Refusing to resolve it quickly","Studying the friction",     "Conflict turns into information",   ["Witnessing","Unlearning"]],
+  // Awareness
+  ["Watching the watcher",      6, 2, "A thought noticed as a thought", "Stillness or shock",           "Stepping back",              "The observer separates from the observed",["Roles we perform","Seeing the frame"]],
+  ["Witnessing",                6, 3, "Experience as it happens",       "Letting the story pause",      "Attending without judging",  "Experience without identification",  ["Living the question","Tension as teacher"]],
+  ["Awareness of change",       6, 4, "The whole cycle",                "Having lived it once",         "Recognising the pattern",    "Change no longer feels like failure",["Unlearning","Beginning again"]],
+  ["Presence",                  6, 4, "This moment",                    "Nothing in particular",        "Being here",                 "A self that doesn't need completing",["The self that remains","Presence"]],
+  // Unbecoming
+  ["Shedding",                  7, 3, "Identities outgrown",            "They stop working",            "Letting them fall",          "Lighter, less certain",              ["Release","Unlearning"]],
+  ["The empty space",           7, 3, "What was removed",               "Silence after the loss",       "Not rushing to refill it",   "Room for something unplanned",       ["Shedding","Beginning again"]],
+  ["Nostalgia",                 7, 2, "The former self",                "Looking back",                 "Longing for who we were",    "A pull toward unbecoming's opposite",["The remembered self","Comfort"]],
+  ["Undoing",                   7, 4, "A finished structure",           "Its completion",               "Loosening it on purpose",    "Nothing stays finished",             ["Awareness of change","Beginning again"]],
+  // Becoming
+  ["Emergence",                 8, 0, "Potential",                      "Conditions aligning",          "Taking form",                "Something begins",                   ["First encounters","Emergence"]],
+  ["Choice",                    8, 1, "Possibilities",                  "A fork",                       "Choosing one, losing others", "Becoming through elimination",       ["The story we tell","Dissonance"]],
+  ["Integration",               8, 4, "The pieces that remain",         "A new coherence",              "Weaving",                    "A self made of change",               ["Memory as material","The self that remains"]],
+  ["Beginning again",           8, 4, "Everything before",              "The cycle completing",         "Starting, knowing it won't end","Formation, once more",             ["Emergence","Undoing","Awareness of change"]],
+];
+
+// How strongly concepts connect in each stage (links appear and disappear).
+const LINK_WEIGHT = [0.15, 1.0, 0.8, 0.3, 0.65];
+// Seconds spent in each stage.
+const STAGE_SECONDS = 11;
+
+/* ═══════════════════════════════════════════════════════════════
+   2. THE SCENE  — you can leave everything below alone.
+   ═══════════════════════════════════════════════════════════════ */
+const canvas = document.getElementById("c");
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0x07070b, 1);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+const world = new THREE.Group(); scene.add(world);
+let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+// dust
+{
+  const n = 1600, pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){ const r = 60 + rnd()*140, t = rnd()*Math.PI*2, p = Math.acos(2*rnd()-1);
+    pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.sin(p)*Math.sin(t); pos[i*3+2]=r*Math.cos(p); }
+  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({color:0x8a8690, size:0.35, transparent:true, opacity:.55})));
+}
+
+// the observer: a small still point at the centre
+function glow(inner, outer){
+  const c = document.createElement("canvas"); c.width=c.height=256; const x=c.getContext("2d");
+  const g = x.createRadialGradient(128,128,0,128,128,128);
+  g.addColorStop(0,inner); g.addColorStop(.3,outer); g.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=g; x.fillRect(0,0,256,256); return new THREE.CanvasTexture(c);
+}
+const observer = new THREE.Sprite(new THREE.SpriteMaterial({map:glow("rgba(240,236,228,1)","rgba(217,168,108,.35)"), blending:THREE.AdditiveBlending, depthWrite:false, transparent:true}));
+observer.scale.set(3,3,1); world.add(observer);
+
+// strands: each dimension is a long curve that starts far out, passes near the centre, and leaves again.
+// Starting points are spread around, so the strands begin independent and cross on the way through.
+const SEG = 160;
+const strands = DIMENSIONS.map((d, i) => {
+  const a = (i / DIMENSIONS.length) * Math.PI * 2 + rnd()*.4;
+  const tilt = (rnd()-.5) * 1.6;
+  const R = 34 + rnd()*8;
+  const start = new THREE.Vector3(Math.cos(a)*R, Math.sin(tilt)*R*.6, Math.sin(a)*R);
+  const end   = new THREE.Vector3(-Math.cos(a+.9)*R, -Math.sin(tilt)*R*.5, -Math.sin(a+.9)*R);
+  const c1 = new THREE.Vector3((rnd()-.5)*18, (rnd()-.5)*18, (rnd()-.5)*18);
+  const c2 = new THREE.Vector3((rnd()-.5)*18, (rnd()-.5)*18, (rnd()-.5)*18);
+  const curve = new THREE.CubicBezierCurve3(start, c1, c2, end);
+  const base = curve.getPoints(SEG);
+  const pos = new Float32Array((SEG+1)*3);
+  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos,3));
+  g.setDrawRange(0, 0);
+  const m = new THREE.LineBasicMaterial({color:d[1], transparent:true, opacity:.6, blending:THREE.AdditiveBlending});
+  const line = new THREE.Line(g, m); world.add(line);
+  const m2 = m.clone(); m2.opacity = .2; const halo = new THREE.Line(g, m2); halo.scale.setScalar(1.01); world.add(halo);
+  return {name:d[0], color:d[1], presence:d[2], base, pos, g, m, m2, phase:rnd()*6.28, freq:.35+rnd()*.4, cur:0};
+});
+
+// concepts sit along their strand; stage decides how far along
+const byName = {}; CONCEPTS.forEach((c,i) => byName[c[0]] = i);
+const labelsEl = document.getElementById("labels");
+const nodes = CONCEPTS.map((c, i) => {
+  const [name, dim, stage] = c;
+  const t = 0.12 + (stage/4) * 0.74 + (rnd()-.5)*.08;
+  const el = document.createElement("div"); el.className = "lbl";
+  el.style.color = "#" + DIMENSIONS[dim][1].toString(16).padStart(6,"0");
+  el.innerHTML = `<span>${name}</span><small>${DIMENSIONS[dim][0]}</small>`;
+  el.addEventListener("click", e => { e.stopPropagation(); showCard(i); });
+  labelsEl.appendChild(el);
+  return {i, name, dim, stage, t, el, p:new THREE.Vector3(), vis:0};
+});
+document.getElementById("count").textContent = `${CONCEPTS.length} concepts · ${DIMENSIONS.length} strands · ${STAGES.length} stages`;
+
+// links between related concepts
+const linkPairs = [];
+CONCEPTS.forEach((c,i) => (c[7]||[]).forEach(r => { const j = byName[r]; if (j!==undefined && j!==i && !linkPairs.some(([a,b]) => (a===i&&b===j)||(a===j&&b===i))) linkPairs.push([i,j]); }));
+const linkPos = new Float32Array(linkPairs.length*2*3), linkCol = new Float32Array(linkPairs.length*2*3);
+const linkGeo = new THREE.BufferGeometry();
+linkGeo.setAttribute("position", new THREE.BufferAttribute(linkPos,3));
+linkGeo.setAttribute("color", new THREE.BufferAttribute(linkCol,3));
+const linkMat = new THREE.LineBasicMaterial({vertexColors:true, transparent:true, opacity:1, blending:THREE.AdditiveBlending});
+world.add(new THREE.LineSegments(linkGeo, linkMat));
+
+// stage scrubber
+const stagesEl = document.getElementById("stages"), bar = document.getElementById("bar");
+STAGES.forEach(([n, line], i) => {
+  const b = document.createElement("button"); b.className="stage"; b.innerHTML = `<b>${n}</b><i>${line}</i>`;
+  b.addEventListener("click", () => { cycle = i + .02; });
+  stagesEl.appendChild(b);
+});
+const stageBtns = [...stagesEl.querySelectorAll(".stage")];
+
+// card
+const card = document.getElementById("card"); let selected = -1;
+function showCard(i){
+  const c = CONCEPTS[i]; selected = i;
+  document.getElementById("cName").textContent = c[0];
+  const d = document.getElementById("cDim"); d.textContent = DIMENSIONS[c[1]][0]; d.style.color = "#" + DIMENSIONS[c[1]][1].toString(16).padStart(6,"0");
+  document.getElementById("cStage").textContent = STAGES[c[2]][0];
+  document.getElementById("cInput").textContent = c[3];
+  document.getElementById("cTrigger").textContent = c[4];
+  document.getElementById("cProcess").textContent = c[5];
+  document.getElementById("cOutcome").textContent = c[6];
+  document.getElementById("cRel").textContent = (c[7]||[]).filter(r => r!==c[0]).join(" · ") || "—";
+  card.hidden = false;
+}
+document.getElementById("close").addEventListener("click", () => { card.hidden = true; selected = -1; });
+canvas.addEventListener("click", () => { if (!dragged) { card.hidden = true; selected = -1; } });
+
+// orbit + zoom
+let rotX = .18, rotY = .4, targetDist = 70, dist = 70, dragging=false, dragged=false, lx=0, ly=0, pinch0=0;
+const mouse = new THREE.Vector2(-9,-9);
+canvas.addEventListener("pointerdown", e => { dragging=true; dragged=false; lx=e.clientX; ly=e.clientY; canvas.setPointerCapture(e.pointerId); });
+addEventListener("pointermove", e => {
+  mouse.x = (e.clientX/innerWidth)*2-1; mouse.y = -(e.clientY/innerHeight)*2+1;
+  if (!dragging) return;
+  const dx=e.clientX-lx, dy=e.clientY-ly; if (Math.abs(dx)+Math.abs(dy)>3) dragged=true;
+  rotY += dx*.005; rotX = Math.max(-1.3, Math.min(1.3, rotX + dy*.005)); lx=e.clientX; ly=e.clientY;
+});
+addEventListener("pointerup", () => dragging=false);
+canvas.addEventListener("wheel", e => { e.preventDefault(); targetDist = Math.max(22, Math.min(140, targetDist*(1+Math.sign(e.deltaY)*.08))); }, {passive:false});
+canvas.addEventListener("touchmove", e => { if (e.touches.length===2){ const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY); if (pinch0) targetDist = Math.max(22, Math.min(140, targetDist*pinch0/d)); pinch0=d; } }, {passive:true});
+canvas.addEventListener("touchend", () => pinch0=0);
+
+// play / pause
+let playing = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+const playBtn = document.getElementById("play"); playBtn.textContent = playing ? "Pause" : "Play";
+playBtn.addEventListener("click", () => { playing = !playing; playBtn.textContent = playing ? "Pause" : "Play"; });
+addEventListener("keydown", e => { if (e.key==="Escape"){ card.hidden = true; selected = -1; } if (e.key===" "){ playBtn.click(); e.preventDefault(); } });
+
+function resize(){ renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+// the cycle: a number from 0 to 5 that wraps. 2.4 = 40% of the way through Contradiction.
+let cycle = 0.0, time = 0, last = performance.now();
+const smooth = (a, b, f) => a + (b - a) * f;
+const easeIO = x => x<.5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2;
+// presence of a value across the cycle, blending between neighbouring stages
+function at(arr, cyc){ const i = Math.floor(cyc) % 5, j = (i+1) % 5, f = easeIO(cyc - Math.floor(cyc)); return smooth(arr[i], arr[j], f); }
+
+const tmp = new THREE.Vector3(), col = new THREE.Color();
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt = Math.min(.05, (now-last)/1000); last = now; time += dt;
+  if (playing) cycle = (cycle + dt / STAGE_SECONDS) % 5;
+  const stageIdx = Math.floor(cycle), stageF = cycle - stageIdx;
+  stageBtns.forEach((b,i) => b.classList.toggle("on", i===stageIdx));
+  bar.style.width = `${(cycle/5)*100}%`;
+  // contradiction shakes the structure; dissolution slows it
+  const shake = Math.max(0, 1 - Math.abs(cycle - 2.5) / .9);
+  const slow  = 1 - .5*Math.max(0, 1 - Math.abs(cycle - 3.5) / .8);
+
+  dist += (targetDist - dist) * .08;
+  if (!dragging) rotY += dt * .035 * slow;
+  camera.position.set(Math.sin(rotY)*Math.cos(rotX)*dist, Math.sin(rotX)*dist, Math.cos(rotY)*Math.cos(rotX)*dist);
+  camera.lookAt(0,0,0);
+  observer.scale.setScalar(3 + .6*Math.sin(time*1.1) + 2*at([0,0,.4,1,1],cycle));
+
+  strands.forEach(s => {
+    const target = at(s.presence, cycle);
+    s.cur += (target - s.cur) * .04;           // strands grow and withdraw, never snapping
+    const n = Math.max(2, Math.round(s.cur * SEG));
+    s.g.setDrawRange(0, n);
+    const amp = .5 + shake*2.2;
+    for (let k=0;k<=SEG;k++){
+      const b = s.base[k], f = k/SEG;
+      tmp.copy(b);
+      tmp.x += Math.sin(time*s.freq + s.phase + f*5) * amp * (0.4 + f*.6);
+      tmp.y += Math.cos(time*s.freq*.7 + s.phase + f*4) * amp * (0.4 + f*.6);
+      tmp.z += Math.sin(time*s.freq*.9 + s.phase*1.3 + f*3) * amp * .6;
+      if (shake > 0) { tmp.x += (rnd()-.5)*shake*.6; tmp.y += (rnd()-.5)*shake*.6; }
+      s.pos[k*3]=tmp.x; s.pos[k*3+1]=tmp.y; s.pos[k*3+2]=tmp.z;
+    }
+    s.g.attributes.position.needsUpdate = true;
+    s.m.opacity = .25 + .55*s.cur; s.m2.opacity = .08 + .2*s.cur;
+  });
+
+  // concepts: visible when their strand has grown past them; labels fade with distance
+  let hot = -1, hotD = 30;
+  const mx = (mouse.x*.5+.5)*innerWidth, my = (-mouse.y*.5+.5)*innerHeight;
+  nodes.forEach(nd => {
+    const s = strands[nd.dim]; const k = Math.round(nd.t*SEG);
+    nd.p.set(s.pos[k*3], s.pos[k*3+1], s.pos[k*3+2]);
+    const reached = s.cur > nd.t + .02 ? 1 : 0;
+    nd.vis += (reached - nd.vis) * .06;
+    tmp.copy(nd.p).project(camera);
+    const x = (tmp.x*.5+.5)*innerWidth, y = (-tmp.y*.5+.5)*innerHeight;
+    const behind = tmp.z > 1;
+    const depth = THREE.MathUtils.clamp(1 - (tmp.z - .965)/.035, .2, 1);
+    nd.el.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%)`;
+    nd.el.style.opacity = behind ? 0 : nd.vis * depth;
+    nd.el.style.pointerEvents = nd.vis > .5 && !behind ? "auto" : "none";
+    if (!behind && nd.vis > .5) { const d = Math.hypot(x-mx, y-my); if (d < hotD) { hotD = d; hot = nd.i; } }
+  });
+  nodes.forEach(nd => nd.el.classList.toggle("hot", nd.i===hot || nd.i===selected));
+
+  // links: brightness follows the stage and both ends' presence; highlighted around the hovered concept
+  const lw = at(LINK_WEIGHT, cycle);
+  linkPairs.forEach(([a,b], q) => {
+    const na = nodes[a], nb = nodes[b];
+    const w = Math.min(na.vis, nb.vis) * lw * (1 - .5*shake*Math.sin(time*9+q));
+    const focus = (hot===a||hot===b||selected===a||selected===b) ? 1 : .35;
+    linkPos.set([na.p.x,na.p.y,na.p.z, nb.p.x,nb.p.y,nb.p.z], q*6);
+    col.set(DIMENSIONS[na.dim][1]).multiplyScalar(w*focus); linkCol.set([col.r,col.g,col.b], q*6);
+    col.set(DIMENSIONS[nb.dim][1]).multiplyScalar(w*focus); linkCol.set([col.r,col.g,col.b], q*6+3);
+  });
+  linkGeo.attributes.position.needsUpdate = true; linkGeo.attributes.color.needsUpdate = true;
+
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+</script>
